@@ -84,8 +84,6 @@ class ProPlayerApiServiceTest extends TestCase
         $body .= '"weiboLink": "wl"';
         $body .= '}}';
 
-        echo $body;
-
         $this->mockHandler->reset();
         $this->mockHandler->append(new Response(200, [], $body));
         $this->apiClient->expects($this->once())->method('getClient')->willReturn($this->client);
