@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Api\ProPlayerApiService;
+use App\Service\Api\PublicMatchesApiService;
 use App\Service\Data\DotaProPlayerDataService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,5 +33,19 @@ class ProPlayerController extends AbstractController
             null,
             Response::HTTP_NO_CONTENT
         );
+    }
+
+
+    /**
+     * @Route("/test", name="pro_player")
+     * @param PublicMatchesApiService $publicMatchesApiService
+     */
+    public function test(PublicMatchesApiService $publicMatchesApiService)
+    {
+
+        $matches = $publicMatchesApiService->retrieveMatchIdentifiers(5283233518);
+
+        var_dump($matches);
+        die();
     }
 }
