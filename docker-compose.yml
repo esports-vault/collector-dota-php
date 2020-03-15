@@ -1,12 +1,54 @@
+#version: '3.7'
+#services:
+#  collector-dota-database:
+#    container_name: "collector-dota-database"
+#    image: mysql
+#    ports:
+#      - "3309:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: vault-dota
+#      MYSQL_USER: vault-dota
+#      MYSQL_PASSWORD: vault-dota-pwd
+#
+#
+
 version: '3.7'
 services:
-  collector-dota-database:
-    container_name: "collector-dota-database"
-    image: mysql
+  collector-dota-nginx:
+    build:
+      args:
+        VERSION: $NGINX_VERSION
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+      target: dev
+    volumes:
+      - ./assets:/app/public
+    depends_on:
+      - collector-dota-php-fpm
     ports:
-      - "3309:3306"
+      - 8003:80
+
+  collector-dota-php-fpm:
+    build:
+      args:
+        VERSION: $PHP_VERSION
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+      target: dev
+    volumes:
+      - .:/app
+    command: sh -c 'composer install --no-interaction --optimize-autoloader && php-fpm'
+    depends_on:
+      - collector-dota-mysql
+
+  collector-dota-mysql:
+    build:
+      args:
+        VERSION: $MYSQL_VERSION
+      context: ./docker/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: vault-dota
-      MYSQL_USER: vault-dota
-      MYSQL_PASSWORD: vault-dota-pwd
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
