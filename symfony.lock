@@ -75,6 +75,9 @@
     "doctrine/reflection": {
         "version": "v1.1.0"
     },
+    "gmostafa/php-graphql-client": {
+        "version": "v1.4.1"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.5.2"
     },

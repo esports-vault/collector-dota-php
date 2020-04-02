@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\Graph\MatchGraphRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,5 +23,14 @@ class PingController extends AbstractController
         return $this->json([
             'message' => 'ok'
         ]);
+    }
+
+    /**
+     * @Route("/test", name="ping")
+     */
+    public function test(MatchGraphRepository $matchGraphRepository) : void
+    {
+
+        $matchGraphRepository->getMatchQuery();
     }
 }
