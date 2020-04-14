@@ -1,6 +1,8 @@
 {
     "type": "project",
     "license": "proprietary",
+    "name": "esports-vault/olcollector-dota",
+    "description": "Consumer to collect data for all dota related pieces.",
     "require": {
         "php": "^7.4",
         "ext-ctype": "*",
