@@ -61,6 +61,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "vendor/bin/simple-phpunit"
         ]
     },
     "conflict": {

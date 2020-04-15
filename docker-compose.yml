@@ -10,8 +10,6 @@
 #      MYSQL_DATABASE: vault-dota
 #      MYSQL_USER: vault-dota
 #      MYSQL_PASSWORD: vault-dota-pwd
-#
-#
 
 version: '3.7'
 services:
