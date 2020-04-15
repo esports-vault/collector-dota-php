@@ -11,6 +11,8 @@ use App\Entity\DotaMatchPlayerMinuteStats;
 use App\Mapper\DotaMatchMapper;
 use App\Mapper\DotaMatchPlayerMapper;
 use App\Message\DotaMatchMessageList;
+use App\MessageHandler\Task\AbilityCastTask;
+use App\MessageHandler\Task\StatsPerMinuteTask;
 use App\Repository\Graph\MatchGraphRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -41,7 +43,9 @@ class DotaMatchListMessageHandler implements MessageHandlerInterface
         }
         $matches = $this->matchGraphRepository->getInfoForMatchList($requestedMatchIds);
 
+
         foreach ($matches as $match) {
+
             $receivedMatchIds[] = $match->id;
 
             $this->entityManager->persist(
@@ -57,8 +61,8 @@ class DotaMatchListMessageHandler implements MessageHandlerInterface
                 $heroes[$player->heroId] = $player->steamAccountId;
             }
 
-
             foreach ($match->players as $player){
+
                 /**
                  * @var DotaMatchPlayer $matchPlayer
                  */
@@ -69,52 +73,21 @@ class DotaMatchListMessageHandler implements MessageHandlerInterface
                     $matchPlayerEntity
                 );
 
-                $perMinute = [
-                    'actionsPerMinute' => 'apm',
-                    'campStack' => 'stack',
-                    'tripsFountainPerMinute' => 'fountain_trips',
-                    'deniesPerMinute' => 'denies',
-                    'experiencePerMinute' => 'experience',
-                    'goldPerMinute' => 'gold',
-                    'healPerMinute' => 'heal',
-                    'heroDamagePerMinute' => 'hero_damage',
-                    'lastHitsPerMinute' => 'last_hits',
-                    'networthPerMinute' => 'net_worth',
-                    'towerDamagePerMinute' => 'tower_damage',
-                ];
+                $statsPerMinute = StatsPerMinuteTask::execute($player, $matchPlayerEntity);
 
-                /** Save actions per minute */
-                foreach ($perMinute as $key => $name) {
-                    foreach ($player->stats->$key as $minute => $count) {
-                        $minuteStatsEntity = DotaMatchPlayerMinuteStats::create(
-                            $matchPlayerEntity,
-                            $name,
-                            $minute,
-                            $count
-                        );
-
-                        $this->entityManager->persist(
-                            $minuteStatsEntity
-                        );
-                    }
+                /** Save stats per minute */
+                foreach ($statsPerMinute as $statPerMinute) {
+                    $this->entityManager->persist(
+                        $statPerMinute
+                    );
                 }
 
                 /** Save the bloody ability usages */
-                foreach($player->stats->abilityCastReport as $abilityCastReport) {
-                    foreach ($abilityCastReport->targets as $target) {
-                        $abilityEntity = DotaMatchPlayerAbility::create(
-                            $matchPlayerEntity,
-                            $abilityCastReport->abilityId,
-                            $heroes[$target->target],
-                            $target->target,
-                            $target->duration,
-                            $target->count,
-                        );
-
-                        $this->entityManager->persist(
-                            $abilityEntity
-                        );
-                    }
+                $abilityEntities = AbilityCastTask::execute($player, $matchPlayerEntity, $heroes);
+                foreach($abilityEntities as $abilityEntity) {
+                    $this->entityManager->persist(
+                        $abilityEntity
+                    );
                 }
             }
         }

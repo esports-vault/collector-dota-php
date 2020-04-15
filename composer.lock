@@ -1651,16 +1651,16 @@
         },
         {
             "name": "mark-gerarts/auto-mapper-plus",
-            "version": "1.3.9",
+            "version": "1.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mark-gerarts/automapper-plus.git",
-                "reference": "a74b074d99a5483139ea9e52fd94fdaf9623cd03"
+                "reference": "d3fc01021c0681213bbd4071acc6d98654c5c513"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mark-gerarts/automapper-plus/zipball/a74b074d99a5483139ea9e52fd94fdaf9623cd03",
-                "reference": "a74b074d99a5483139ea9e52fd94fdaf9623cd03",
+                "url": "https://api.github.com/repos/mark-gerarts/automapper-plus/zipball/d3fc01021c0681213bbd4071acc6d98654c5c513",
+                "reference": "d3fc01021c0681213bbd4071acc6d98654c5c513",
                 "shasum": ""
             },
             "require": {
@@ -1694,7 +1694,7 @@
                 "converter",
                 "object-to-object"
             ],
-            "time": "2020-02-27T16:24:32+00:00"
+            "time": "2020-04-15T07:32:37+00:00"
         },
         {
             "name": "ocramius/package-versions",
