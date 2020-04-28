@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.steam:
+        key: '%env(STEAM_API_KEY)%'
+        endpoint: 'https://api.steampowered.com/'
+        endpoint-dota-match-history: '/IDOTA2Match_570/GetMatchHistory/V001/'
 
 services:
     # default configuration for services in *this* file
